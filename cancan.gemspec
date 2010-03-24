@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/ryanb/cancan"
   
   s.version = "1.0.3"
-  s.date = "20010-03-24"
+  s.date = "2010-03-24"
   
   s.authors = ["Ryan Bates", "Luzifer Altenberg"]
   s.email = "ryan@railscasts.com"
