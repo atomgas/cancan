@@ -38,6 +38,12 @@ describe CanCan::ControllerAdditions do
     mock(@controller_class).before_filter({}) { |options, block| block.call(@controller) }
     @controller_class.load_and_authorize_resource :foo => :bar
   end
+
+  it "cancan_authorize should setup a before filter which passes call to ResourceAuthorization" do
+    stub(CanCan::ResourceAuthorization).new(@controller, @controller.params, :foo => :bar).mock!.cancan_authorize
+    mock(@controller_class).before_filter({}) { |options, block| block.call(@controller) }
+    @controller_class.cancan_authorize :foo => :bar
+  end
   
   it "authorize_resource should setup a before filter which passes call to ResourceAuthorization" do
     stub(CanCan::ResourceAuthorization).new(@controller, @controller.params, :foo => :bar).mock!.authorize_resource

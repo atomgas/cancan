@@ -13,7 +13,20 @@ module CanCan
       # 
       def load_and_authorize_resource(options = {})
         before_filter(options.slice(:only, :except)) { |c| ResourceAuthorization.new(c, c.params, options.except(:only, :except)).load_and_authorize_resource }
+      end             
+            
+       # Sets up a before filter which loads and authorizes the current resource (with load_and_authorize_resource) if it exists. 
+       # Otherwise it authorizes the controller_name by default or :authorizable, which is passed in through options.
+       # 
+       #   class DashboardController < ApplicationController
+       #     cancan_authorize
+       #   end
+       #            
+      # cancan_authorize for controller-based authorization if there is no model/resource
+      def cancan_authorize(options = {})
+        before_filter(options.slice(:only, :except)) { |c| ResourceAuthorization.new(c, c.params, options.except(:only, :except)).cancan_authorize }
       end
+      
       
       # Sets up a before filter which loads the appropriate model resource into an instance variable.
       # For example, given an ArticlesController it will load the current article into the @article

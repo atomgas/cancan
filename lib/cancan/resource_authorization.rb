@@ -21,14 +21,30 @@ module CanCan
           resource.find(params[:id])
         end
       end
-    end
+    end 
+    
+    def cancan_authorize
+      if resource_exists?
+        load_and_authorize_resource
+      else
+        authorize_authorizable_or_controller
+      end
+    end    
     
     def authorize_resource
       @controller.unauthorized! if @controller.cannot?(params[:action].to_sym, resource.model_instance || resource.model_class)
     end
+            
+    def authorize_authorizable_or_controller
+      @controller.unauthorized! if @controller.cannot?(params[:action].to_sym, @options[:authorizable] || @controller.controller_name.to_sym)
+    end
     
     private
     
+    def resource_exists?
+      Object.const_defined?(model_name.to_s.camelize)
+    end
+        
     def resource
       @resource ||= ControllerResource.new(@controller, model_name, parent_resource, @options)
     end

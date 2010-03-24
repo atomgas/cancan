@@ -168,7 +168,20 @@ If you want to customize the loading behavior on certain actions, you can do so 
   end
 
 Here the @book instance variable is already set so it will not be loaded again for that action. This works for nested resources as well.
+     
+=== Model-less Controller Authorization
 
+If you have a controller that has no associated model you can use +cancan_authorize+ to secure your controller. 
+
+  class DashboardController < ApplicationController
+    cancan_authorize
+  
+    ...
+  end                                   
+       
+Do define an ability for this controller, use a symbol in the Ability class:
+
+  can :read, :dashboard  
 
 == Assumptions & Configuring
 

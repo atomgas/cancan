@@ -38,7 +38,29 @@ describe CanCan::ResourceAuthorization do
     authorization = CanCan::ResourceAuthorization.new(@controller, :controller => "abilities", :action => "index")
     authorization.load_resource
     @controller.instance_variable_get(:@ability).should be_nil
-  end
+  end       
+  
+  it "should check if resource exists and return false does not exist" do
+    authorization = CanCan::ResourceAuthorization.new(@controller, :controller => "posts", :action => "index")
+    authorization.send(:resource_exists?).should be_false 
+  end  
+ 
+  it "should check if resource exists and return true if exists" do
+    authorization = CanCan::ResourceAuthorization.new(@controller, :controller => "persons", :action => "index")
+    authorization.send(:resource_exists?).should be_true 
+  end 
+
+  it "cancan_authorize should call load_and_authorize_resource if resource exists" do
+    authorization = CanCan::ResourceAuthorization.new(@controller, :controller => "persons", :action => "index")
+    stub(authorization).load_and_authorize_resource{ :ok }
+    authorization.cancan_authorize.should == :ok
+  end 
+
+  it "cancan_authorize should not call authorize_authorizable_or_controller if resource does not exist" do
+    authorization = CanCan::ResourceAuthorization.new(@controller, :controller => "post", :action => "index")
+    stub(authorization).authorize_authorizable_or_controller{ :ok }
+    authorization.cancan_authorize.should == :ok
+  end 
   
   it "should perform authorization using controller action and loaded model" do
     @controller.instance_variable_set(:@ability, :some_resource)
