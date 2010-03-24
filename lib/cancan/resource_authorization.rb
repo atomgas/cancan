@@ -42,7 +42,7 @@ module CanCan
     private
     
     def resource_exists?
-      Object.const_defined?(model_name.to_s.camelize)
+      !!(Object.const_defined?(model_name.to_s.camelize) || model_name.to_s.camelize.constantize rescue false)
     end
         
     def resource
